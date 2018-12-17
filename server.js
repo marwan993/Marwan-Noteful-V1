@@ -20,21 +20,21 @@ app.listen(8080, function() {
 })
 
 app.get('/api/notes', (req, res) => {
-    res.json(data);
-})
+      res.json(data);
+    
+  });
 
 app.get('/api/notes/:id', (req,res) => {
-    const {noteId} = req.params;
-    let requestedId;
-    for (let i = 0; i < data.length; i++){
-        if(data[i].id === noteId){
-            requestedId = data[i]
-        }
-    }
-
+    const id = req.params.id;
+    const requestedId = data.find(item => item.id === Number(id));
     res.json(requestedId);
-
 });
+
+
+
+
+
+
 
 
 
