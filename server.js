@@ -23,5 +23,20 @@ app.get('/api/notes', (req, res) => {
     res.json(data);
 })
 
+app.get('/api/notes/:id', (req,res) => {
+    const {noteId} = req.params;
+    let requestedId;
+    for (let i = 0; i < data.length; i++){
+        if(data[i].id === noteId){
+            requestedId = data[i]
+        }
+    }
+
+    res.json(requestedId);
+
+});
+
+
+
 
 
