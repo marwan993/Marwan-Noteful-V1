@@ -14,6 +14,22 @@ console.log('Hello Noteful!');
 
 app.use(express.static('public'));
 
+app.use(function(req, res, next){
+    let err = new Error('Not Found');
+    err.status = 404;
+    res.status(404).json({message: 'Not Found'});
+    next()
+});
+
+app.use(function(err, req, res, next){
+    res.status(err.status || 500);
+    res.json({
+        message: err.message,
+        error: err
+    });
+    next()
+});
+
 app.listen(PORT, function() {
     console.info(`Server litening on ${this.address().port}`);
 
@@ -44,6 +60,8 @@ app.get('/api/notes/id', (req, res)=>{
     const foundId = data.find(item => item.id === Number(id));
     res.json(foundId);
 });
+
+// 
 
 
 
