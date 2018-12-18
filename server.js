@@ -4,6 +4,8 @@
 const express = require("express");
 const data = require("./db/notes");
 const app = express();
+const config = require("./config");
+const {PORT} = config;
 
 
 console.log('Hello Noteful!');
@@ -12,7 +14,7 @@ console.log('Hello Noteful!');
 
 app.use(express.static('public'));
 
-app.listen(8080, function() {
+app.listen(PORT, function() {
     console.info(`Server litening on ${this.address().port}`);
 
 }).on('error', err =>{
