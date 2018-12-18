@@ -20,7 +20,14 @@ app.listen(8080, function() {
 })
 
 app.get('/api/notes', (req, res) => {
-      res.json(data);
+
+    const searchTerm = req.query.searchTerm;
+    if(searchTerm){
+    const filteredItem = data.filter(item => item.title.includes(searchTerm));
+    res.json(filteredItem);
+    } else {
+        res.json(data);
+    }
     
   });
 
@@ -35,6 +42,7 @@ app.get('/api/notes/id', (req, res)=>{
     const foundId = data.find(item => item.id === Number(id));
     res.json(foundId);
 });
+
 
 
 
