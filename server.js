@@ -16,11 +16,49 @@ console.log('Hello Noteful!');
 
 app.use(express.static('public'));
 
+app.get('/api/notes', (req, res, next) => {
+    console.log(req.query);
+    const {searchTerm} = req.query;
+    notes.filter({}, (err,list) => {
+        if(err){
+            return next(err);
+        }
+        res.json(list.filter(item => item.title.includes(searchTerm))); 
+    });
+    
+  });
+
+app.get('/api/notes/:id', (req,res) => {
+    const id = req.params.id;
+    notes.find(id,(err,item) => {
+        if(err){
+            return next(err);
+        }
+        if(item){
+            res.json(item);
+        } else {
+            console.log('not found');
+        }
+    });
+});
+
+app.get('/api/notes/id', (req, res)=>{
+    const id = req.params.id;
+    notes.find(id, (err, item) => {
+        if(err){
+            return next(err);
+        }
+        if(item){
+            res.json(item);
+        } else {
+            console.log('not found')
+        }
+    });
+});
 app.use(function(req, res, next){
     let err = new Error('Not Found');
     err.status = 404;
     res.status(404).json({message: 'Not Found'});
-    next()
 });
 
 app.use(function(err, req, res, next){
@@ -29,7 +67,6 @@ app.use(function(err, req, res, next){
         message: err.message,
         error: err
     });
-    next()
 });
 
 app.listen(PORT, function() {
@@ -39,29 +76,8 @@ app.listen(PORT, function() {
     console.error(err);
 })
 
-app.get('/api/notes', (req, res) => {
 
-    const searchTerm = req.query.searchTerm;
-    if(searchTerm){
-    const filteredItem = data.filter(item => item.title.includes(searchTerm));
-    res.json(filteredItem);
-    } else {
-        res.json(data);
-    }
-    
-  });
 
-app.get('/api/notes/:id', (req,res) => {
-    const id = req.params.id;
-    const requestedId = data.find(item => item.id === Number(id));
-    res.json(requestedId);
-});
-
-app.get('/api/notes/id', (req, res)=>{
-    const id = req.params.id;
-    const foundId = data.find(item => item.id === Number(id));
-    res.json(foundId);
-});
 
 // 
 
