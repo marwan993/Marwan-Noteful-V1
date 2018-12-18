@@ -1,4 +1,4 @@
-function expressMiddlewareLogger(req, res, next) {
+function logger(req, res, next) {
 
     const now = new Date();
     console.log(
