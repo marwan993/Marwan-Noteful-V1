@@ -2,12 +2,11 @@
 
 // Load array of notes
 const express = require("express");
-const data = require("./db/notes");
-const simDB = require("./db/simDB");
-const notes = simDB.initialize(data);
+const morgan = require("morgan");
 const logger = require("./middleware/logger");
 const config = require("./config");
 const {PORT} = config;
+const notesRouter = require("./router/notes.router");
 
 const app = express()
 
@@ -15,63 +14,15 @@ const app = express()
 console.log('Hello Noteful!');
 
 // INSERT EXPRESS APP CODE HERE...
-app.use(logger);
+// app.use(logger);
 app.use(express.static('public'));
 app.use(express.json());
 
-app.get('/api/notes', (req, res, next) => {
-    const { searchTerm } = req.query;
-  
-    notes.filter(searchTerm, (err, list) => {
-      if (err) {
-        return next(err);
-      }
-      res.json(list);
-    });
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/views/index.html');
   });
-app.get('/api/notes/:id', (req,res) => {
-    const id = req.params.id;
-    notes.find(id,(err,item) => {
-        if(err){
-            return next(err);
-        }
-        if(item){
-            res.json(item);
-        } else {
-            next()
-        }
-    });
-});
-
-app.put('/api/notes/:id', (req, res, next) => {
-    const id = req.params.id;
-  
-    const updateObj = {};
-    const updateableFields = ['title', 'content'];
-  
-    updateableFields.forEach(field => {
-      if (field in req.body) {
-        updateObj[field] = req.body[field];
-      }
-    });
-  
-
-  
-    notes.update(id, updateObj, (err, item) => {
-      if (err) {
-        return next(err);
-      }
-      if (item) {
-        res.json(item);
-      } else {
-        next();
-      }
-    });
-  });
-  
-
-
-
+app.use('/api', notesRouter);
+app.use(morgan('common'));
 
 app.use(function(req, res, next){
     let err = new Error('Not Found');
@@ -86,7 +37,6 @@ app.use(function(err, req, res, next){
         error: err
     });
 });
-
 app.listen(PORT, function() {
     console.info(`Server litening on ${this.address().port}`);
 
