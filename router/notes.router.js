@@ -74,6 +74,24 @@ router.put('/notes/:id', (req, res, next) => {
           }
       });
   });
+
+  router.delete('/notes/:id', (req, res, next) => {
+    const id = req.params.id;
+  
+    notes.delete(id, (err,idNum) => {
+        if(idNum === null){
+            const err = new Error('ID Number is invalid');
+            err.status = 500;
+            return next(err);
+        }
+      if (err) {
+        return next(err);
+      }
+      console.log(`note (${id}) is deleted`);
+      res.sendStatus(204);
+    });
+  });
+  
   
 
 
