@@ -1,0 +1,13 @@
+<script>
+  // test get all
+  api.search({})
+    .then(response => {
+      console.log(response)
+    });
+
+  // test get all with search term
+  api.search({searchTerm: 'cats'})
+    .then(response => {
+      console.log(response)
+    });
+</script>
