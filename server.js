@@ -3,7 +3,6 @@
 // Load array of notes
 const express = require("express");
 const morgan = require("morgan");
-const logger = require("./middleware/logger");
 const config = require("./config");
 const {PORT} = config;
 const notesRouter = require("./router/notes.router");
@@ -37,12 +36,18 @@ app.use(function(err, req, res, next){
         error: err
     });
 });
-app.listen(PORT, function() {
-    console.info(`Server litening on ${this.address().port}`);
 
-}).on('error', err =>{
-    console.error(err);
-})
+    if(require.main === module){
+        app.listen(PORT, function(){
+            console.info(`Server litening on ${this.address().port}`);
+        }).on('error',err=>{
+            console.error(err);
+        });
+    }
+
+    module.exports = app;
+
+
 
 
 
